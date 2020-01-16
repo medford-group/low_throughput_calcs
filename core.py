@@ -31,57 +31,110 @@ def generate_file_structure(filename):
         files = structure_dict.pop('files')
     if 'directories' in structure_dict:
         tree = structure_dict['directories']
-    recursive_dict_read(tree, variables, files)
+    # transform the variables into the ranges
+    var_ranges = {}
+    for name, var in variables.items():
+        if [type(a) == str for a in var] == [True] * len(var):
+            var_ranges[name] = var
+        else:
+            var_ranges[name] = np.arange(*var)
+    recursive_dict_read(tree, var_ranges, files)
 
-def copy_files(files):
+def copy_files(files, variables_dict):
+    if files is None:
+        return None
     if type(files) != list:
         raise Exception('files must be a list')
     for fil in files:
-        filename = fil.split(os.sep)[-1]
-        copy(fil, '.')
-        replace(filename, 'lol', 'lol')
+        orig_filename = fil.split(os.sep)[-1]
+        path = fil.split(os.sep)[:-1]
+        filename = orig_filename
+        for var, value in variables_dict.items():
+            if '{' + var + '}' in orig_filename:
+                filename = orig_filename.replace('{' + var + '}', str(value))
+        if '{' in filename and '}' in filename:
+            continue
+        new_file = fil.replace(orig_filename, filename)
+        
+        copy(new_file, '.')
+        for var, value in variables_dict.items():
+            replace(filename, '{'+var+'}', str(value))
+            
     
-def recursive_dict_read(structure_dict, variables=None, files=None):
+def recursive_dict_read(structure_dict, variables=None, files=None,
+                        variable_values={}):
     """
     a function to recursively build a file tree
     """
     for key, value in structure_dict.items():
         if variables is not None:
-            var_combos = find_var_combos(variables, key)
+            var_combos, var_values = find_var_combos(variables, key, variable_values)
             #print(var_combos)
-            for combo in var_combos:
+            for combo, vals in zip(var_combos, var_values):
                 os.mkdir(combo)
                 os.chdir(combo)
                 if type(value) == dict:
-                    recursive_dict_read(value, variables)
+                    recursive_dict_read(value, variables, files=files, 
+                                        variable_values=vals)
+                else:
+                    # if we're at the bottom, copy the files
+                    copy_files(files, vals)
+
                 os.chdir('..')
         else:
             os.mkdir(key)
             os.chdir(key)
             if type(value) == dict:
                 # if we're not at the bottom, keep building
-                recursive_dict_read(value, variables)
+                recursive_dict_read(value, variables,
+                                    variable_values=var_values)
             else:
                 # if we're at the bottom, copy the files
-                pass
+                copy_files(files, variable_values)
             
-                copy()
             os.chdir('..')
 
-def find_var_combos(variables, name):
-    
+def find_var_combos(variables, name, variable_values):
+    vars_blocks = []
+    vars_present = []
+    tmp_name = name
+    names = []
+    prev_name = ''
+    variable_values_list = []
+    if '{' not in name:
+        return [name], [variable_values]
+    # find all the variable blocks they input
+    while True:
+        current_block = tmp_name.split('{')[len(tmp_name.split('{')) -1 ].split('}')[0]
+        tmp_name = tmp_name.replace('{'+current_block+'}', '')
+        if prev_name == tmp_name:
+            break
+        vars_present.append(current_block)
+        prev_name = tmp_name
+    for var in vars_present:
+        if var not in variables:
+            raise Exception('the variable {} was used, but was not defined'.format(var))
+    all_combos = product(*[variables[a] for a in vars_present]) 
+    for combo in all_combos:
+        tmp_name = name
+        for var, value in zip(vars_present, combo):
+            tmp_name = tmp_name.replace('{'+var+'}', str(value))
+            variable_values[var] = value
+        names.append(tmp_name)
+        variable_values_list.append(variable_values.copy())
+    return names, variable_values_list
 
 """
 def find_var_combos(variables, name):
-    """
-    """
+"""
+"""
     This function finds all the instances of the variables present in curly
     brackets in the string and returns all the combinations of these variables
     with the values provided in the `variables` argument.
 
     this is not very efficient
-    """
-    """
+"""
+"""
     vars_blocks = []
     vars_present = []
     var_ranges = {a[0]:np.arange(*a[1]) for a in variables.items()}
@@ -120,25 +173,7 @@ def find_var_combos(variables, name):
         for i, evaluated_block in enumerate(combo):
             string = string.replace('{' + vars_blocks[i] + '}', evaluated_block)
         names.append(string)
-        
-            
-
-    #for i, var_block in enumerate(vars_blocks):
-    #    combos = 
-    #    for variable_combo in sorted(list(variables.keys()), key=len):
-    #        for value in var_ranges[variable]:
-    #                fo
-    #                evaluated_strings.append(var_block.replace(variable, str(value)))
-        #for variable in sorted(list(variables.keys()), key=len):
-        #    for value in var_ranges[variable]
-        #        evaluated_strings.append(var_block.replace(variable, str(value)))
                 
     return names 
 """
 
-#def recursive_gen(key):
-#    os.mkdir(key)
-#    os.chdir(key)
-#    if type(value) == dict:
-#        recursive_dict_read(value)
-#    os.chdir('..')

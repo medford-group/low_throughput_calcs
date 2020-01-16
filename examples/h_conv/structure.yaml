@@ -1,13 +1,16 @@
 directories:
-    rutile:
-        h{2*n}:
+    Cu:
+        FD_Grid_{n}_{n}_{n}:
             npts:
-            kpts{m*10}x{m}x1:
-                run{x}:
+            kpts{m}x{m}x1:
+                run_{x}:
 variables:
-    n: [0.1, 0.5, 0.05]
+    n: [4, 12, 2]
     m: [1, 5, 1]
-    x: [1, 10]
+    x: ['high', 'low']
 files:
-    - 'files/run.sh'
-    - 'files/{m}.py'
+    run_{x}:
+    - '/gpfs/pace1/project/chbe-medford/medford-share/gits/dev/low_thru/low_thru/examples/h_conv/files/run.sh'
+    - '/gpfs/pace1/project/chbe-medford/medford-share/gits/dev/low_thru/low_thru/examples/h_conv/files/sprc-calc.inpt'
+    - '/gpfs/pace1/project/chbe-medford/medford-share/gits/dev/low_thru/low_thru/examples/h_conv/files/sprc-calc.ion'
+    - '/gpfs/pace1/project/chbe-medford/medford-share/gits/dev/low_thru/low_thru/examples/h_conv/files/Cu.pot'
