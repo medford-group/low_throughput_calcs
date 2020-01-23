@@ -8,6 +8,7 @@ from tempfile import mkstemp
 from shutil import move
 from os import remove, close
 
+absolute_base_dir = os.getcwd()
 
 def replace(file_path, pattern, subst):
     #Create temp file
@@ -54,8 +55,12 @@ def copy_files(files, variables_dict):
                 filename = orig_filename.replace('{' + var + '}', str(value))
         if '{' in filename and '}' in filename:
             continue
-        new_file = fil.replace(orig_filename, filename)
-        
+        # if an absolute path is not given, use the top level directory
+        if not fil.startswith('/'):
+            new_file =absolute_base_dir + os.sep + fil.replace(orig_filename, filename)
+        else:
+            new_file = fil.replace(orig_filename, filename)
+
         copy(new_file, '.')
         for var, value in variables_dict.items():
             replace(filename, '{'+var+'}', str(value))
@@ -94,6 +99,7 @@ def recursive_dict_read(structure_dict, variables=None, files=None,
             
             os.chdir('..')
 
+"""
 def find_var_combos(variables, name, variable_values):
     vars_blocks = []
     vars_present = []
@@ -123,28 +129,26 @@ def find_var_combos(variables, name, variable_values):
         names.append(tmp_name)
         variable_values_list.append(variable_values.copy())
     return names, variable_values_list
+"""
 
-"""
-def find_var_combos(variables, name):
-"""
-"""
+def find_var_combos(variables, name, variable_values):
+    """
     This function finds all the instances of the variables present in curly
     brackets in the string and returns all the combinations of these variables
     with the values provided in the `variables` argument.
 
     this is not very efficient
-"""
-"""
+    """
     vars_blocks = []
     vars_present = []
-    var_ranges = {a[0]:np.arange(*a[1]) for a in variables.items()}
+    #var_ranges = {a[0]:np.arange(*a[1]) for a in variables.items()}
     tmp_name = name
     evaluated_strings = []
     names = []
     blocks_dict = {}
     prev_name = ''
     if '{' not in name:
-        return [name]
+        return [name], [variable_values]
     # find all the variable blocks they input
     while True:
         current_block = tmp_name.split('{')[len(tmp_name.split('{')) -1 ].split('}')[0]
@@ -155,25 +159,39 @@ def find_var_combos(variables, name):
         prev_name = tmp_name
     for var_block in vars_blocks:
         evaluated_strings = []
+        variable_dicts = []
         tmp_var_block = var_block
         for variable in sorted(list(variables.keys()), key=len):
             if variable in tmp_var_block:
                 vars_present.append(variable)
                 tmp_var_block.replace(variable,'<>')
-        vars_present = sorted(list(set(vars_present)), key=len)
-        combos = product(*[var_ranges[a] for a in vars_present])
+    vars_present = sorted(list(set(vars_present)), key=len)
+    #combos = product(*[variables[a] for a in vars_present])
+    for var_block in vars_blocks:
+        combos = product(*[variables[a] for a in vars_present])
+        evaluated_strings = [] 
         for combo in combos:
             string = var_block
-            for i, value in enumerate(combo):
-                string = string.replace(vars_present[i], str(value))
+            var_val_dict = {vars_present[i]:value for i, value in enumerate(combo)}
+            for var, value in var_val_dict.items():
+                string = string.replace(var, str(value))
+            variable_values.update(var_val_dict)
+            variable_dicts.append(variable_values.copy())
             evaluated_strings.append(str(eval(string))) # TODO: make this secure
         blocks_dict[var_block] = evaluated_strings.copy()
-    for combo in product(*[blocks_dict[a] for a in vars_blocks]):
+    #for combo in product(*[blocks_dict[a] for a in vars_blocks]):
+    for combo in zip(*[blocks_dict[a] for a in vars_blocks]):
         string = name
         for i, evaluated_block in enumerate(combo):
             string = string.replace('{' + vars_blocks[i] + '}', evaluated_block)
+            
         names.append(string)
-                
-    return names 
-"""
+ 
+    return names, variable_dicts
+
+
+
+
+
+
 
