@@ -30,9 +30,16 @@ directories:
 
 ## variables
 
-variables contains a set of variables that will be used in the directory tree. You must put this in the format `variable: [varible_start, variable_stop, variable_step_size]` (note that is is using the [numpy arange function](https://docs.scipy.org/doc/numpy/reference/generated/numpy.arange.html) underneath the hood). You may also enter a list of strings which will simply by used as such.
+variables contains a set of variables that will be used in the directory tree. You must put this in the format `variable: [varible_start, variable_stop, variable_step_size]` (note that is is using the [numpy arange function](https://docs.scipy.org/doc/numpy/reference/generated/numpy.arange.html) underneath the hood). You may also enter a list of strings which will simply by used as such. building on the example above, the structure below will generate 4 additional folders, `1_bitcoins`-`4_bitcoins`.
 
 ```
+directories:
+    memes:
+        doge:
+        Elon_Musk:
+        {b}_bitcoins:
+variables:
+    - b: [1,5,1]
 
 ```
 

@@ -1,0 +1,15 @@
+directories:
+    runs_{sp}:
+        layers_{l}:
+            pw_{pw}:
+                kpts{kpts}_{kpts}_1:
+variables:
+    sp: ['ads', 'surf']
+    pw: [300,900,100]
+    kpts: [3,8,1]
+    l: [2,7,1]
+files:
+    - '{sp}_build.py'
+    - 'run.sh'
+    - 'run.py'
+    - 'nitrate.xyz'

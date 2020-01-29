@@ -1,0 +1,11 @@
+directories:
+    runs_{sp}:
+        pw_{pw}:
+variables:
+    sp: ['mol']
+    pw: [300,900,100]
+files:
+    - 'mol_build.py'
+    - 'run.sh'
+    - 'run.py'
+    - 'parameters.json'

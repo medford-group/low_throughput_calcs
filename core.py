@@ -172,12 +172,18 @@ def find_var_combos(variables, name, variable_values):
         evaluated_strings = [] 
         for combo in combos:
             string = var_block
+            contains_strings = False
             var_val_dict = {vars_present[i]:value for i, value in enumerate(combo)}
             for var, value in var_val_dict.items():
+                if type(value) == str:
+                    contains_strings = True
                 string = string.replace(var, str(value))
             variable_values.update(var_val_dict)
             variable_dicts.append(variable_values.copy())
-            evaluated_strings.append(str(eval(string))) # TODO: make this secure
+            if not contains_strings:
+                evaluated_strings.append(str(eval(string))) # TODO: make this secure
+            else:
+                evaluated_strings.append(str(string))
         blocks_dict[var_block] = evaluated_strings.copy()
     #for combo in product(*[blocks_dict[a] for a in vars_blocks]):
     for combo in zip(*[blocks_dict[a] for a in vars_blocks]):
