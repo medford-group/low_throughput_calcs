@@ -37,7 +37,7 @@ directories:
     stuff:
         dogs:
         cars:
-        {b}_coins:
+        coins_{b}:
 variables:
     - b: [1,5,1]
 
@@ -52,7 +52,7 @@ directories:
     stuff:
         dogs:
         cars:
-        {b}_coins:
+        coins_{b}:
 variables:
     - b: [1,5,1]
 
@@ -66,6 +66,7 @@ files:
 this list may be incomplete but:
 
 1. you may only specify a variable once in a a given tree
+2. a filename may not begin with a variable
 
 
 ## Full Example

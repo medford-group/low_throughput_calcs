@@ -3,7 +3,7 @@
 import sys
 from low_thru.core import generate_file_structure
 
-if sys.argv[1]:
+if len(sys.argv) > 1:
     structure_file = sys.argv[1]
 else:
     structure_file = 'structure.yaml'
