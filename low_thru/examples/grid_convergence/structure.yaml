@@ -1,0 +1,10 @@
+directories:
+    runs:
+        spacing_{h}:
+variables:
+    h: ['0.09','0.11', '0.12', '0.13', '0.14', '0.15', '0.16']
+files:
+    - 'files/run.sh'
+    - 'files/run.py'
+    - 'files/structure.xyz'
+    - 'files/parameters.json'

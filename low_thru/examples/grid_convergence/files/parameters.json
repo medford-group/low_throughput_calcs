@@ -1,0 +1,1 @@
+{"h": 0.149, "MAXIT_SCF": 250, "TOL_SCF_QE": 1e-06, "BC": [true, true, true], "EXCHANGE_CORRELATION": "LDA", "MIXING_VARIABLE": "density", "MIXING_PRECOND": "kerker", "ELEC_TEMP": 1160.45, "KPOINT_GRID": [3, 4, 2]}
