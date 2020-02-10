@@ -9,7 +9,6 @@ variables:
     m: [1, 5, 1]
     x: ['high', 'low']
 files:
-    run_{x}:
     - '/gpfs/pace1/project/chbe-medford/medford-share/gits/dev/low_thru/low_thru/examples/h_conv/files/run.sh'
     - '/gpfs/pace1/project/chbe-medford/medford-share/gits/dev/low_thru/low_thru/examples/h_conv/files/sprc-calc.inpt'
     - '/gpfs/pace1/project/chbe-medford/medford-share/gits/dev/low_thru/low_thru/examples/h_conv/files/sprc-calc.ion'

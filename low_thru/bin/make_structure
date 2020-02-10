@@ -1,0 +1,11 @@
+#!/nv/hp13/bcomer3/.conda/envs/atm/bin/python
+
+import sys
+from low_thru.core import generate_file_structure
+
+if sys.argv[1]:
+    structure_file = sys.argv[1]
+else:
+    structure_file = 'structure.yaml'
+
+generate_file_structure(structure_file)

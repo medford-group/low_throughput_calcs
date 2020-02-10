@@ -1,4 +1,5 @@
 import os
+import ast
 from shutil import copy
 import yaml
 import numpy as np
@@ -76,7 +77,8 @@ def recursive_dict_read(structure_dict, variables=None, files=None,
             var_combos, var_values = find_var_combos(variables, key, variable_values)
             #print(var_combos)
             for combo, vals in zip(var_combos, var_values):
-                os.mkdir(combo)
+                if not os.path.isdir(combo):
+                    os.mkdir(combo)
                 os.chdir(combo)
                 if type(value) == dict:
                     recursive_dict_read(value, variables, files=files, 
@@ -87,7 +89,8 @@ def recursive_dict_read(structure_dict, variables=None, files=None,
 
                 os.chdir('..')
         else:
-            os.mkdir(key)
+            if not os.path.isdir(key):
+                os.mkdir(key)
             os.chdir(key)
             if type(value) == dict:
                 # if we're not at the bottom, keep building
@@ -181,7 +184,7 @@ def find_var_combos(variables, name, variable_values):
             variable_values.update(var_val_dict)
             variable_dicts.append(variable_values.copy())
             if not contains_strings:
-                evaluated_strings.append(str(eval(string))) # TODO: make this secure
+                evaluated_strings.append(str(ast.literal_eval(string))) # TODO: make this secure
             else:
                 evaluated_strings.append(str(string))
         blocks_dict[var_block] = evaluated_strings.copy()
