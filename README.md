@@ -15,7 +15,7 @@ note that you may need a `--user` flag if you are on a supercomputing cluster
 
 ## Usage
 
-Low Thru required a structured input file to operate. This input file must be named `structure.yaml`. This file must be in the [yaml](https://learn.getgrav.org/16/advanced/yaml) format and contain three fileds at the top level: `directories`, `variables`, and `files`. An example file can be found below in the examples section.
+Low Thru requires a structured input file to operate. This input file must be named `structure.yaml`. This file must be in the [yaml](https://learn.getgrav.org/16/advanced/yaml) format and contain three files at the top level: `directories`, `variables`, and `files`. An example file can be found below in the examples section.
 
 ### Directories
 
@@ -86,5 +86,5 @@ files:
 
 ```
 
-This file would make a top level directory called "Cu" and inside that would be directories FD\_GRID\_4\_4\_4 through FD\_GRID\_10\_10\_10 at increments of 2. inside each of these is a folder called npts and kpts1\_1\_1 through kpts4\_4\_1 at increments of 1. Inside these are folders named run\_high and run\_low. The files run.sh and run.py in the current direcotry will be copied into all the run\_high and run\_low folders, as well as the npts folders. These files will be scanned for the presence of the variable identifiers {n}, {m}, and {x}. These will be replaced with the values they have taken on in the tree above. Note that the copied of these files in the npts folders will only be scanned for {n} identiers, as the other variables are not defined anywhere in the tree above it.
+This file would make a top level directory called "Cu" and inside that would be directories FD\_GRID\_4\_4\_4 through FD\_GRID\_10\_10\_10 at increments of 2. inside each of these is a folder called npts and kpts1\_1\_1 through kpts4\_4\_1 at increments of 1. Inside the kpts folders will be folders named run\_high and run\_low. The files run.sh and run.py in the current directory will be copied into all the run\_high and run\_low folders, as well as the npts folders. These files will be scanned for the presence of the variable identifiers {n}, {m}, and {x}. These will be replaced with the values they have taken on in the tree above. Note that the copied of these files in the npts folders will only be scanned for {n} identiers, as the other variables are not defined anywhere in the tree above it.
 

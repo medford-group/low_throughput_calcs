@@ -10,7 +10,7 @@ setup(name='low_thru',
       author='Ben Comer',
       author_email='ben.comer@gatech.edu',
       url='https://github.com/medford-group/low_throughput_calcs',
-      #scripts=['make_structure'],
+      scripts=['low_thru/bin/make_structure'],
       packages=find_packages(),
       install_requires=['numpy']
      )
