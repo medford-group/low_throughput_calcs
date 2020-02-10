@@ -61,6 +61,10 @@ files:
 
 ```
 
+## Tree Construction
+
+To perform the file tree construction you simply need to run the command `make_structure` in your command line that should have been installed with this package.
+
 ## Rules
 
 this list may be incomplete but:
