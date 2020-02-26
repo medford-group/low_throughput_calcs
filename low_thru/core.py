@@ -26,7 +26,10 @@ def replace(file_path, pattern, subst):
 
 
 def generate_file_structure(filename):
-    structure_dict = yaml.load(open(filename, 'r'))
+    try:
+        structure_dict = yaml.load(open(filename, 'r'))
+    except:
+        structure_dict = yaml.load(open(filename, 'rb'))
     if 'variables' in structure_dict:
         variables = structure_dict.pop('variables')
     if 'files' in structure_dict:

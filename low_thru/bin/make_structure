@@ -1,4 +1,4 @@
-#!/nv/hp13/bcomer3/.conda/envs/atm/bin/python
+#!/usr/bin/env python
 
 import sys
 from low_thru.core import generate_file_structure
